@@ -1,0 +1,89 @@
+<project name="JSON-RPC 2.0 Base" default="dist" basedir=".">
+
+	<property name="version" value="1.25.1"/>
+	<property name="jarfile" value="jsonrpc2-base-${version}.jar"/>
+	
+	<path id="classpath.compile">
+		<fileset dir="lib">
+			<include name="*.jar"/>
+		</fileset>
+	</path>
+	
+	<path id="classpath.runtime">
+		<fileset dir="lib">
+			<include name="*.jar"/>
+		</fileset>
+		<pathelement location="build"/>
+	</path>
+	
+	<target name="clean">
+		<delete dir="build"/>
+		<delete dir="javadoc"/>
+		<delete file="${jarfile}"/>
+		<delete>
+			<fileset dir="." includes="**/TEST-*"/>
+		</delete>
+	</target>
+	
+	<target name="compile">
+		<mkdir dir="build"/>
+		<javac srcdir="src" 
+		       destdir="build" 
+		       classpathref="classpath.compile"
+		       includeantruntime="false">
+	
+			<compilerarg value="-Xlint:unchecked"/>
+		</javac>
+	</target>
+	
+	<target name="compile-tests">
+		<mkdir dir="build"/>
+		<javac srcdir="test" 
+		       destdir="build" 
+		       classpathref="classpath.compile"
+		       includeantruntime="false"/>
+	</target>
+	
+	<target name="junit" depends="compile,compile-tests">
+		<junit showoutput="true">
+			<classpath refid="classpath.runtime"/>
+			<formatter type="plain"/>
+			<test name="com.thetransactioncompany.jsonrpc2.Test"/>
+			<test name="com.thetransactioncompany.jsonrpc2.TestNonStdAttributes"/>
+			<test name="com.thetransactioncompany.jsonrpc2.util.Test"/>
+		</junit>
+	</target>
+	
+	<target name="javadoc">
+		<mkdir dir="javadoc"/>
+		<javadoc packagenames="com.thetransactioncompany.jsonrpc2.*, com.thetransactioncompany.jsonrpc2.util.*"
+	        	 sourcepath="src"
+			 classpathref="classpath.compile"
+			 destdir="javadoc"
+			 author="true"
+			 version="true"
+			 use="false"
+			 linksource="true"
+			 windowtitle="JSON-RPC 2.0 Base"
+			 doctitle="JSON-RPC 2.0 Base">
+		</javadoc>
+	</target>
+	
+	<target name="jar" depends="compile">
+		<jar destfile="${jarfile}" basedir="build" excludes="**/Test.class">
+			<zipfileset src="lib/json-smart-1.1.1.jar" includes="**/*.class"/>
+		</jar>
+	</target>
+	
+	<target name="jar-min" depends="compile">
+		<jar destfile="${jarfile}" basedir="build" excludes="**/Test.class"/>
+	</target>  
+	
+	<target name="dist" depends="clean,compile,compile-tests,junit,javadoc,jar">
+		<delete dir="build"/>
+		<delete>
+			<fileset dir="." includes="**/TEST-*"/>
+		</delete>
+	</target>
+
+</project>

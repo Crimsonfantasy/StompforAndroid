@@ -1,0 +1,299 @@
+<HTML>
+<BODY BGCOLOR="white">
+<PRE>
+<FONT color="green">001</FONT>    package com.thetransactioncompany.jsonrpc2;<a name="line.1"></a>
+<FONT color="green">002</FONT>    <a name="line.2"></a>
+<FONT color="green">003</FONT>    <a name="line.3"></a>
+<FONT color="green">004</FONT>    import java.util.*;<a name="line.4"></a>
+<FONT color="green">005</FONT>    <a name="line.5"></a>
+<FONT color="green">006</FONT>    import net.minidev.json.JSONObject;<a name="line.6"></a>
+<FONT color="green">007</FONT>    <a name="line.7"></a>
+<FONT color="green">008</FONT>    <a name="line.8"></a>
+<FONT color="green">009</FONT>    /**<a name="line.9"></a>
+<FONT color="green">010</FONT>     * The base abstract class for JSON-RPC 2.0 requests, notifications and<a name="line.10"></a>
+<FONT color="green">011</FONT>     * responses. Provides common methods for parsing (from JSON string) and<a name="line.11"></a>
+<FONT color="green">012</FONT>     * serialisation (to JSON string) of these three message types.<a name="line.12"></a>
+<FONT color="green">013</FONT>     *<a name="line.13"></a>
+<FONT color="green">014</FONT>     * &lt;p&gt;Example parsing and serialisation back to JSON:<a name="line.14"></a>
+<FONT color="green">015</FONT>     *<a name="line.15"></a>
+<FONT color="green">016</FONT>     * &lt;pre&gt;<a name="line.16"></a>
+<FONT color="green">017</FONT>     * String jsonString = "{\"method\":\"progressNotify\",\"params\":[\"75%\"],\"jsonrpc\":\"2.0\"}";<a name="line.17"></a>
+<FONT color="green">018</FONT>     *<a name="line.18"></a>
+<FONT color="green">019</FONT>     * JSONRPC2Message message = null;<a name="line.19"></a>
+<FONT color="green">020</FONT>     *<a name="line.20"></a>
+<FONT color="green">021</FONT>     * // parse<a name="line.21"></a>
+<FONT color="green">022</FONT>     * try {<a name="line.22"></a>
+<FONT color="green">023</FONT>     *        message = JSONRPC2Message.parse(jsonString);<a name="line.23"></a>
+<FONT color="green">024</FONT>     * } catch (JSONRPC2ParseException e) {<a name="line.24"></a>
+<FONT color="green">025</FONT>     *        // handle parse exception<a name="line.25"></a>
+<FONT color="green">026</FONT>     * }<a name="line.26"></a>
+<FONT color="green">027</FONT>     *<a name="line.27"></a>
+<FONT color="green">028</FONT>     * if (message instanceof JSONRPC2Request)<a name="line.28"></a>
+<FONT color="green">029</FONT>     *        System.out.println("The message is a request");<a name="line.29"></a>
+<FONT color="green">030</FONT>     * else if (message instanceof JSONRPC2Notification)<a name="line.30"></a>
+<FONT color="green">031</FONT>     *        System.out.println("The message is a notification");<a name="line.31"></a>
+<FONT color="green">032</FONT>     * else if (message instanceof JSONRPC2Response)<a name="line.32"></a>
+<FONT color="green">033</FONT>     *        System.out.println("The message is a response");<a name="line.33"></a>
+<FONT color="green">034</FONT>     *<a name="line.34"></a>
+<FONT color="green">035</FONT>     * // serialise back to JSON string<a name="line.35"></a>
+<FONT color="green">036</FONT>     * System.out.println(message);<a name="line.36"></a>
+<FONT color="green">037</FONT>     *<a name="line.37"></a>
+<FONT color="green">038</FONT>     * &lt;/pre&gt;<a name="line.38"></a>
+<FONT color="green">039</FONT>     *<a name="line.39"></a>
+<FONT color="green">040</FONT>     * &lt;p id="map"&gt;The mapping between JSON and Java entities (as defined by the <a name="line.40"></a>
+<FONT color="green">041</FONT>     * underlying JSON Smart library): <a name="line.41"></a>
+<FONT color="green">042</FONT>     *<a name="line.42"></a>
+<FONT color="green">043</FONT>     * &lt;pre&gt;<a name="line.43"></a>
+<FONT color="green">044</FONT>     *     true|false  &lt;---&gt;  java.lang.Boolean<a name="line.44"></a>
+<FONT color="green">045</FONT>     *     number      &lt;---&gt;  java.lang.Number<a name="line.45"></a>
+<FONT color="green">046</FONT>     *     string      &lt;---&gt;  java.lang.String<a name="line.46"></a>
+<FONT color="green">047</FONT>     *     array       &lt;---&gt;  java.util.List<a name="line.47"></a>
+<FONT color="green">048</FONT>     *     object      &lt;---&gt;  java.util.Map<a name="line.48"></a>
+<FONT color="green">049</FONT>     *     null        &lt;---&gt;  null<a name="line.49"></a>
+<FONT color="green">050</FONT>     * &lt;/pre&gt;<a name="line.50"></a>
+<FONT color="green">051</FONT>     *<a name="line.51"></a>
+<FONT color="green">052</FONT>     * &lt;p&gt;The JSON-RPC 2.0 specification and user group forum can be found <a name="line.52"></a>
+<FONT color="green">053</FONT>     * &lt;a href="http://groups.google.com/group/json-rpc"&gt;here&lt;/a&gt;.<a name="line.53"></a>
+<FONT color="green">054</FONT>     * <a name="line.54"></a>
+<FONT color="green">055</FONT>     * @author Vladimir Dzhuvinov<a name="line.55"></a>
+<FONT color="green">056</FONT>     * @version 1.25.1 (2011-07-09)<a name="line.56"></a>
+<FONT color="green">057</FONT>     */<a name="line.57"></a>
+<FONT color="green">058</FONT>    public abstract class JSONRPC2Message {<a name="line.58"></a>
+<FONT color="green">059</FONT>    <a name="line.59"></a>
+<FONT color="green">060</FONT>    <a name="line.60"></a>
+<FONT color="green">061</FONT>            /**<a name="line.61"></a>
+<FONT color="green">062</FONT>             * Map of non-standard JSON-RPC 2.0 message attributes, {@code null} if<a name="line.62"></a>
+<FONT color="green">063</FONT>             * none.<a name="line.63"></a>
+<FONT color="green">064</FONT>             */<a name="line.64"></a>
+<FONT color="green">065</FONT>            private Map &lt;String,Object&gt; nonStdAttributes = null;<a name="line.65"></a>
+<FONT color="green">066</FONT>            <a name="line.66"></a>
+<FONT color="green">067</FONT>    <a name="line.67"></a>
+<FONT color="green">068</FONT>            /** <a name="line.68"></a>
+<FONT color="green">069</FONT>             * Provides common parsing of JSON-RPC 2.0 requests, notifications <a name="line.69"></a>
+<FONT color="green">070</FONT>             * and responses. Use this method if you don't know which type of <a name="line.70"></a>
+<FONT color="green">071</FONT>             * JSON-RPC message the input JSON string represents.<a name="line.71"></a>
+<FONT color="green">072</FONT>             *<a name="line.72"></a>
+<FONT color="green">073</FONT>             * &lt;p&gt;Batched requests / notifications are not supported.<a name="line.73"></a>
+<FONT color="green">074</FONT>             *<a name="line.74"></a>
+<FONT color="green">075</FONT>             * &lt;p&gt;This method is thread-safe.<a name="line.75"></a>
+<FONT color="green">076</FONT>             *<a name="line.76"></a>
+<FONT color="green">077</FONT>             * &lt;p&gt;If you are certain about the message type use the dedicated <a name="line.77"></a>
+<FONT color="green">078</FONT>             * {@link JSONRPC2Request#parse}, {@link JSONRPC2Notification#parse} <a name="line.78"></a>
+<FONT color="green">079</FONT>             * or {@link JSONRPC2Response#parse} methods. They are more efficient <a name="line.79"></a>
+<FONT color="green">080</FONT>             * and provide a more detailed parse error reporting.<a name="line.80"></a>
+<FONT color="green">081</FONT>             *<a name="line.81"></a>
+<FONT color="green">082</FONT>             * &lt;p&gt;The member order of parsed JSON objects will not be preserved <a name="line.82"></a>
+<FONT color="green">083</FONT>             * (for efficiency reasons) and the JSON-RPC 2.0 version field must be <a name="line.83"></a>
+<FONT color="green">084</FONT>             * set to "2.0". To change this behaviour check the optional {@link <a name="line.84"></a>
+<FONT color="green">085</FONT>             * #parse(String,boolean,boolean)} method.<a name="line.85"></a>
+<FONT color="green">086</FONT>             *<a name="line.86"></a>
+<FONT color="green">087</FONT>             * @param jsonString A JSON string representing a JSON-RPC 2.0 request, <a name="line.87"></a>
+<FONT color="green">088</FONT>             *                   notification or response, UTF-8 encoded.<a name="line.88"></a>
+<FONT color="green">089</FONT>             *<a name="line.89"></a>
+<FONT color="green">090</FONT>             * @return An instance of {@link JSONRPC2Request}, <a name="line.90"></a>
+<FONT color="green">091</FONT>             *         {@link JSONRPC2Notification} or {@link JSONRPC2Response}.<a name="line.91"></a>
+<FONT color="green">092</FONT>             *<a name="line.92"></a>
+<FONT color="green">093</FONT>             * @throws JSONRPC2ParseException With detailed message if parsing <a name="line.93"></a>
+<FONT color="green">094</FONT>             *                                failed.<a name="line.94"></a>
+<FONT color="green">095</FONT>             */<a name="line.95"></a>
+<FONT color="green">096</FONT>            public static JSONRPC2Message parse(final String jsonString)<a name="line.96"></a>
+<FONT color="green">097</FONT>                    throws JSONRPC2ParseException {<a name="line.97"></a>
+<FONT color="green">098</FONT>    <a name="line.98"></a>
+<FONT color="green">099</FONT>                    return parse(jsonString, false, false);<a name="line.99"></a>
+<FONT color="green">100</FONT>            }<a name="line.100"></a>
+<FONT color="green">101</FONT>            <a name="line.101"></a>
+<FONT color="green">102</FONT>            <a name="line.102"></a>
+<FONT color="green">103</FONT>            /** <a name="line.103"></a>
+<FONT color="green">104</FONT>             * Provides common parsing of JSON-RPC 2.0 requests, notifications <a name="line.104"></a>
+<FONT color="green">105</FONT>             * and responses. Use this method if you don't know which type of <a name="line.105"></a>
+<FONT color="green">106</FONT>             * JSON-RPC message the input string represents.<a name="line.106"></a>
+<FONT color="green">107</FONT>             *<a name="line.107"></a>
+<FONT color="green">108</FONT>             * &lt;p&gt;Batched requests / notifications are not supported.<a name="line.108"></a>
+<FONT color="green">109</FONT>             *<a name="line.109"></a>
+<FONT color="green">110</FONT>             * &lt;p&gt;This method is thread-safe.<a name="line.110"></a>
+<FONT color="green">111</FONT>             *<a name="line.111"></a>
+<FONT color="green">112</FONT>             * &lt;p&gt;If you are certain about the message type use the dedicated <a name="line.112"></a>
+<FONT color="green">113</FONT>             * {@link JSONRPC2Request#parse}, {@link JSONRPC2Notification#parse} <a name="line.113"></a>
+<FONT color="green">114</FONT>             * or {@link JSONRPC2Response#parse} methods. They are more efficient <a name="line.114"></a>
+<FONT color="green">115</FONT>             * and provide a more detailed parse error reporting.<a name="line.115"></a>
+<FONT color="green">116</FONT>             *<a name="line.116"></a>
+<FONT color="green">117</FONT>             * @param jsonString    A JSON string representing a JSON-RPC 2.0 <a name="line.117"></a>
+<FONT color="green">118</FONT>             *                      request, notification or response, UTF-8<a name="line.118"></a>
+<FONT color="green">119</FONT>             *                      encoded.<a name="line.119"></a>
+<FONT color="green">120</FONT>             * @param preserveOrder If {@code true} the member order of JSON objects<a name="line.120"></a>
+<FONT color="green">121</FONT>             *                      in parameters and results must be preserved.<a name="line.121"></a>
+<FONT color="green">122</FONT>             * @param ignoreVersion If {@code true} the {@code "jsonrpc":"2.0"}<a name="line.122"></a>
+<FONT color="green">123</FONT>             *                      version field in the JSON-RPC 2.0 message will <a name="line.123"></a>
+<FONT color="green">124</FONT>             *                      not be checked.<a name="line.124"></a>
+<FONT color="green">125</FONT>             *<a name="line.125"></a>
+<FONT color="green">126</FONT>             * @return An instance of {@link JSONRPC2Request}, <a name="line.126"></a>
+<FONT color="green">127</FONT>             *         {@link JSONRPC2Notification} or {@link JSONRPC2Response}.<a name="line.127"></a>
+<FONT color="green">128</FONT>             *<a name="line.128"></a>
+<FONT color="green">129</FONT>             * @throws JSONRPC2ParseException With detailed message if parsing <a name="line.129"></a>
+<FONT color="green">130</FONT>             *                                failed.<a name="line.130"></a>
+<FONT color="green">131</FONT>             */<a name="line.131"></a>
+<FONT color="green">132</FONT>            public static JSONRPC2Message parse(final String jsonString, final boolean preserveOrder, final boolean ignoreVersion)<a name="line.132"></a>
+<FONT color="green">133</FONT>                    throws JSONRPC2ParseException {<a name="line.133"></a>
+<FONT color="green">134</FONT>                    <a name="line.134"></a>
+<FONT color="green">135</FONT>                    JSONRPC2Parser parser = new JSONRPC2Parser(preserveOrder, ignoreVersion);<a name="line.135"></a>
+<FONT color="green">136</FONT>                    <a name="line.136"></a>
+<FONT color="green">137</FONT>                    return parser.parseJSONRPC2Message(jsonString);<a name="line.137"></a>
+<FONT color="green">138</FONT>            }<a name="line.138"></a>
+<FONT color="green">139</FONT>            <a name="line.139"></a>
+<FONT color="green">140</FONT>            <a name="line.140"></a>
+<FONT color="green">141</FONT>            /**<a name="line.141"></a>
+<FONT color="green">142</FONT>             * Appends a non-standard attribute to a JSON-RPC 2.0 message. This is <a name="line.142"></a>
+<FONT color="green">143</FONT>             * done by adding a new member (key / value pair) to the JSON object <a name="line.143"></a>
+<FONT color="green">144</FONT>             * representing the message.<a name="line.144"></a>
+<FONT color="green">145</FONT>             *<a name="line.145"></a>
+<FONT color="green">146</FONT>             * &lt;p&gt;You may use this method to add meta and debugging attributes, <a name="line.146"></a>
+<FONT color="green">147</FONT>             * such as the request processing time, to a JSON-RPC 2.0 message.<a name="line.147"></a>
+<FONT color="green">148</FONT>             *<a name="line.148"></a>
+<FONT color="green">149</FONT>             * @param name  The attribute name. Must not conflict with the existing<a name="line.149"></a>
+<FONT color="green">150</FONT>             *              "method", "id", "params", "result", "error" and "jsonrpc"<a name="line.150"></a>
+<FONT color="green">151</FONT>             *              attributes reserved by the JSON-RPC 2.0 protocol, else <a name="line.151"></a>
+<FONT color="green">152</FONT>             *              an {@code IllegalArgumentException} will be thrown.<a name="line.152"></a>
+<FONT color="green">153</FONT>             * @param value The attribute value. Must be of type String, boolean,<a name="line.153"></a>
+<FONT color="green">154</FONT>             *              number, List, Map or null, else an<a name="line.154"></a>
+<FONT color="green">155</FONT>             *              {@code IllegalArgumentException} will be thrown.<a name="line.155"></a>
+<FONT color="green">156</FONT>             */<a name="line.156"></a>
+<FONT color="green">157</FONT>            public void appendNonStdAttribute(final String name, final Object value) {<a name="line.157"></a>
+<FONT color="green">158</FONT>            <a name="line.158"></a>
+<FONT color="green">159</FONT>                    // Name check<a name="line.159"></a>
+<FONT color="green">160</FONT>                    if (name == null          ||<a name="line.160"></a>
+<FONT color="green">161</FONT>                        name.equals("method") ||<a name="line.161"></a>
+<FONT color="green">162</FONT>                        name.equals("id")     ||<a name="line.162"></a>
+<FONT color="green">163</FONT>                        name.equals("params") ||<a name="line.163"></a>
+<FONT color="green">164</FONT>                        name.equals("result") ||<a name="line.164"></a>
+<FONT color="green">165</FONT>                        name.equals("error")  ||<a name="line.165"></a>
+<FONT color="green">166</FONT>                        name.equals("jsonrpc")   )<a name="line.166"></a>
+<FONT color="green">167</FONT>            <a name="line.167"></a>
+<FONT color="green">168</FONT>                            throw new IllegalArgumentException("Non-standard attribute name violation");<a name="line.168"></a>
+<FONT color="green">169</FONT>            <a name="line.169"></a>
+<FONT color="green">170</FONT>                    // Value check<a name="line.170"></a>
+<FONT color="green">171</FONT>                    if ( value != null                &amp;&amp;<a name="line.171"></a>
+<FONT color="green">172</FONT>                         ! (value instanceof Boolean) &amp;&amp;<a name="line.172"></a>
+<FONT color="green">173</FONT>                         ! (value instanceof Number)  &amp;&amp;<a name="line.173"></a>
+<FONT color="green">174</FONT>                         ! (value instanceof String)  &amp;&amp;<a name="line.174"></a>
+<FONT color="green">175</FONT>                         ! (value instanceof List)    &amp;&amp;<a name="line.175"></a>
+<FONT color="green">176</FONT>                         ! (value instanceof Map)        )<a name="line.176"></a>
+<FONT color="green">177</FONT>                         <a name="line.177"></a>
+<FONT color="green">178</FONT>                            throw new IllegalArgumentException("Illegal non-standard attribute value, must map to a valid JSON type");<a name="line.178"></a>
+<FONT color="green">179</FONT>                    <a name="line.179"></a>
+<FONT color="green">180</FONT>                    <a name="line.180"></a>
+<FONT color="green">181</FONT>                    if (nonStdAttributes == null)<a name="line.181"></a>
+<FONT color="green">182</FONT>                            nonStdAttributes = new HashMap&lt;String,Object&gt;();<a name="line.182"></a>
+<FONT color="green">183</FONT>                    <a name="line.183"></a>
+<FONT color="green">184</FONT>                    nonStdAttributes.put(name, value);<a name="line.184"></a>
+<FONT color="green">185</FONT>            }<a name="line.185"></a>
+<FONT color="green">186</FONT>            <a name="line.186"></a>
+<FONT color="green">187</FONT>            <a name="line.187"></a>
+<FONT color="green">188</FONT>            /**<a name="line.188"></a>
+<FONT color="green">189</FONT>             * Retrieves a non-standard JSON-RPC 2.0 message attribute.<a name="line.189"></a>
+<FONT color="green">190</FONT>             *<a name="line.190"></a>
+<FONT color="green">191</FONT>             * @param name The name of the non-standard attribute to retrieve.<a name="line.191"></a>
+<FONT color="green">192</FONT>             *<a name="line.192"></a>
+<FONT color="green">193</FONT>             * @return The value of the non-standard attribute (may also be <a name="line.193"></a>
+<FONT color="green">194</FONT>             *         {@code null}. {@code null} if not found.<a name="line.194"></a>
+<FONT color="green">195</FONT>             */<a name="line.195"></a>
+<FONT color="green">196</FONT>            public Object getNonStdAttribute(final String name) {<a name="line.196"></a>
+<FONT color="green">197</FONT>            <a name="line.197"></a>
+<FONT color="green">198</FONT>                    if (nonStdAttributes == null)<a name="line.198"></a>
+<FONT color="green">199</FONT>                            return null;<a name="line.199"></a>
+<FONT color="green">200</FONT>                    <a name="line.200"></a>
+<FONT color="green">201</FONT>                    return nonStdAttributes.get(name);<a name="line.201"></a>
+<FONT color="green">202</FONT>            }<a name="line.202"></a>
+<FONT color="green">203</FONT>            <a name="line.203"></a>
+<FONT color="green">204</FONT>            <a name="line.204"></a>
+<FONT color="green">205</FONT>            /**<a name="line.205"></a>
+<FONT color="green">206</FONT>             * Retrieves the non-standard JSON-RPC 2.0 message attributes.<a name="line.206"></a>
+<FONT color="green">207</FONT>             *<a name="line.207"></a>
+<FONT color="green">208</FONT>             * @return The non-standard attributes as a map, {@code null} if none.<a name="line.208"></a>
+<FONT color="green">209</FONT>             */<a name="line.209"></a>
+<FONT color="green">210</FONT>            public Map&lt;String,Object&gt; getNonStandardAttributes() {<a name="line.210"></a>
+<FONT color="green">211</FONT>            <a name="line.211"></a>
+<FONT color="green">212</FONT>                    return nonStdAttributes;<a name="line.212"></a>
+<FONT color="green">213</FONT>            }<a name="line.213"></a>
+<FONT color="green">214</FONT>            <a name="line.214"></a>
+<FONT color="green">215</FONT>            <a name="line.215"></a>
+<FONT color="green">216</FONT>            /** <a name="line.216"></a>
+<FONT color="green">217</FONT>             * Gets a JSON object representing this message.<a name="line.217"></a>
+<FONT color="green">218</FONT>             *<a name="line.218"></a>
+<FONT color="green">219</FONT>             * @return A JSON object.<a name="line.219"></a>
+<FONT color="green">220</FONT>             */<a name="line.220"></a>
+<FONT color="green">221</FONT>            public abstract JSONObject toJSON();<a name="line.221"></a>
+<FONT color="green">222</FONT>            <a name="line.222"></a>
+<FONT color="green">223</FONT>            <a name="line.223"></a>
+<FONT color="green">224</FONT>            /** <a name="line.224"></a>
+<FONT color="green">225</FONT>             * Serialises this message to a JSON string.<a name="line.225"></a>
+<FONT color="green">226</FONT>             *<a name="line.226"></a>
+<FONT color="green">227</FONT>             * @return A JSON-RPC 2.0 encoded string.<a name="line.227"></a>
+<FONT color="green">228</FONT>             */<a name="line.228"></a>
+<FONT color="green">229</FONT>            public String toString() {<a name="line.229"></a>
+<FONT color="green">230</FONT>                    <a name="line.230"></a>
+<FONT color="green">231</FONT>                    return toJSON().toString();<a name="line.231"></a>
+<FONT color="green">232</FONT>            }<a name="line.232"></a>
+<FONT color="green">233</FONT>    }<a name="line.233"></a>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</PRE>
+</BODY>
+</HTML>

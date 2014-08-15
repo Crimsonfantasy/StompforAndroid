@@ -1,0 +1,177 @@
+<HTML>
+<BODY BGCOLOR="white">
+<PRE>
+<FONT color="green">001</FONT>    package com.thetransactioncompany.jsonrpc2;<a name="line.1"></a>
+<FONT color="green">002</FONT>    <a name="line.2"></a>
+<FONT color="green">003</FONT>    <a name="line.3"></a>
+<FONT color="green">004</FONT>    /** <a name="line.4"></a>
+<FONT color="green">005</FONT>     * Thrown to indicate an exception during the parsing of a JSON-RPC 2.0 <a name="line.5"></a>
+<FONT color="green">006</FONT>     * message string.<a name="line.6"></a>
+<FONT color="green">007</FONT>     *<a name="line.7"></a>
+<FONT color="green">008</FONT>     * &lt;p&gt;The JSON-RPC 2.0 specification and user group forum can be found <a name="line.8"></a>
+<FONT color="green">009</FONT>     * &lt;a href="http://groups.google.com/group/json-rpc"&gt;here&lt;/a&gt;.<a name="line.9"></a>
+<FONT color="green">010</FONT>     *<a name="line.10"></a>
+<FONT color="green">011</FONT>     * @author Vladimir Dzhuvinov<a name="line.11"></a>
+<FONT color="green">012</FONT>     * @version 1.25.1 (2010-05-18)<a name="line.12"></a>
+<FONT color="green">013</FONT>     */<a name="line.13"></a>
+<FONT color="green">014</FONT>    public class JSONRPC2ParseException extends Exception {<a name="line.14"></a>
+<FONT color="green">015</FONT>            <a name="line.15"></a>
+<FONT color="green">016</FONT>            <a name="line.16"></a>
+<FONT color="green">017</FONT>            /**<a name="line.17"></a>
+<FONT color="green">018</FONT>             * Indicates a parse exception caused by a JSON message not conforming<a name="line.18"></a>
+<FONT color="green">019</FONT>             * to the JSON-RPC 2.0 protocol.<a name="line.19"></a>
+<FONT color="green">020</FONT>             */<a name="line.20"></a>
+<FONT color="green">021</FONT>            public static int PROTOCOL = 0;<a name="line.21"></a>
+<FONT color="green">022</FONT>            <a name="line.22"></a>
+<FONT color="green">023</FONT>            <a name="line.23"></a>
+<FONT color="green">024</FONT>            /**<a name="line.24"></a>
+<FONT color="green">025</FONT>             * Indicates a parse exception caused by invalid JSON.<a name="line.25"></a>
+<FONT color="green">026</FONT>             */<a name="line.26"></a>
+<FONT color="green">027</FONT>            public static int JSON = 1;<a name="line.27"></a>
+<FONT color="green">028</FONT>            <a name="line.28"></a>
+<FONT color="green">029</FONT>            <a name="line.29"></a>
+<FONT color="green">030</FONT>            /**<a name="line.30"></a>
+<FONT color="green">031</FONT>             * The parse exception cause type. Default is {@link #PROTOCOL}.<a name="line.31"></a>
+<FONT color="green">032</FONT>             */<a name="line.32"></a>
+<FONT color="green">033</FONT>            private int causeType = PROTOCOL;<a name="line.33"></a>
+<FONT color="green">034</FONT>            <a name="line.34"></a>
+<FONT color="green">035</FONT>            <a name="line.35"></a>
+<FONT color="green">036</FONT>            <a name="line.36"></a>
+<FONT color="green">037</FONT>            /** <a name="line.37"></a>
+<FONT color="green">038</FONT>             * The string that could't be parsed.<a name="line.38"></a>
+<FONT color="green">039</FONT>             */<a name="line.39"></a>
+<FONT color="green">040</FONT>            private String unparsableString = null;<a name="line.40"></a>
+<FONT color="green">041</FONT>            <a name="line.41"></a>
+<FONT color="green">042</FONT>            <a name="line.42"></a>
+<FONT color="green">043</FONT>            /** <a name="line.43"></a>
+<FONT color="green">044</FONT>             * Creates a new parse exception with the specified message. The cause <a name="line.44"></a>
+<FONT color="green">045</FONT>             * type is set to {@link #PROTOCOL}.<a name="line.45"></a>
+<FONT color="green">046</FONT>             *<a name="line.46"></a>
+<FONT color="green">047</FONT>             * @param message The exception message.<a name="line.47"></a>
+<FONT color="green">048</FONT>             */<a name="line.48"></a>
+<FONT color="green">049</FONT>            public JSONRPC2ParseException(final String message) {<a name="line.49"></a>
+<FONT color="green">050</FONT>            <a name="line.50"></a>
+<FONT color="green">051</FONT>                    super(message);<a name="line.51"></a>
+<FONT color="green">052</FONT>            }<a name="line.52"></a>
+<FONT color="green">053</FONT>            <a name="line.53"></a>
+<FONT color="green">054</FONT>            <a name="line.54"></a>
+<FONT color="green">055</FONT>            /**<a name="line.55"></a>
+<FONT color="green">056</FONT>             * Creates a new parse exception with the specified message and the <a name="line.56"></a>
+<FONT color="green">057</FONT>             * original string that didn't parse. The cause type is set to<a name="line.57"></a>
+<FONT color="green">058</FONT>             * {@link #PROTOCOL}.<a name="line.58"></a>
+<FONT color="green">059</FONT>             *<a name="line.59"></a>
+<FONT color="green">060</FONT>             * @param message          The exception message.<a name="line.60"></a>
+<FONT color="green">061</FONT>             * @param unparsableString The unparsable string.<a name="line.61"></a>
+<FONT color="green">062</FONT>             */<a name="line.62"></a>
+<FONT color="green">063</FONT>            public JSONRPC2ParseException(final String message, final String unparsableString) {<a name="line.63"></a>
+<FONT color="green">064</FONT>            <a name="line.64"></a>
+<FONT color="green">065</FONT>                    super(message);<a name="line.65"></a>
+<FONT color="green">066</FONT>                    this.unparsableString = unparsableString;<a name="line.66"></a>
+<FONT color="green">067</FONT>            }<a name="line.67"></a>
+<FONT color="green">068</FONT>            <a name="line.68"></a>
+<FONT color="green">069</FONT>            <a name="line.69"></a>
+<FONT color="green">070</FONT>            /**<a name="line.70"></a>
+<FONT color="green">071</FONT>             * Creates a new parse exception with the specified message, cause type <a name="line.71"></a>
+<FONT color="green">072</FONT>             * and the original string that didn't parse.<a name="line.72"></a>
+<FONT color="green">073</FONT>             *<a name="line.73"></a>
+<FONT color="green">074</FONT>             * @param message          The exception message.<a name="line.74"></a>
+<FONT color="green">075</FONT>             * @param causeType        The exception cause type, either <a name="line.75"></a>
+<FONT color="green">076</FONT>             *                         {@link #PROTOCOL} or {@link #JSON}.<a name="line.76"></a>
+<FONT color="green">077</FONT>             * @param unparsableString The unparsable string.<a name="line.77"></a>
+<FONT color="green">078</FONT>             */<a name="line.78"></a>
+<FONT color="green">079</FONT>            public JSONRPC2ParseException(final String message, final int causeType, final String unparsableString) {<a name="line.79"></a>
+<FONT color="green">080</FONT>            <a name="line.80"></a>
+<FONT color="green">081</FONT>                    super(message);<a name="line.81"></a>
+<FONT color="green">082</FONT>                    <a name="line.82"></a>
+<FONT color="green">083</FONT>                    if (causeType != PROTOCOL &amp;&amp; causeType != JSON)<a name="line.83"></a>
+<FONT color="green">084</FONT>                            throw new IllegalArgumentException("Cause type must be either PROTOCOL or JSON");<a name="line.84"></a>
+<FONT color="green">085</FONT>                    <a name="line.85"></a>
+<FONT color="green">086</FONT>                    this.causeType = causeType;<a name="line.86"></a>
+<FONT color="green">087</FONT>                    this.unparsableString = unparsableString;<a name="line.87"></a>
+<FONT color="green">088</FONT>            }<a name="line.88"></a>
+<FONT color="green">089</FONT>            <a name="line.89"></a>
+<FONT color="green">090</FONT>            <a name="line.90"></a>
+<FONT color="green">091</FONT>            /**<a name="line.91"></a>
+<FONT color="green">092</FONT>             * Gets the parse exception cause type.<a name="line.92"></a>
+<FONT color="green">093</FONT>             *<a name="line.93"></a>
+<FONT color="green">094</FONT>             * @return The cause type, either {@link #PROTOCOL} or {@link #JSON}.<a name="line.94"></a>
+<FONT color="green">095</FONT>             */<a name="line.95"></a>
+<FONT color="green">096</FONT>            public int getCauseType() {<a name="line.96"></a>
+<FONT color="green">097</FONT>            <a name="line.97"></a>
+<FONT color="green">098</FONT>                    return causeType;<a name="line.98"></a>
+<FONT color="green">099</FONT>            }<a name="line.99"></a>
+<FONT color="green">100</FONT>            <a name="line.100"></a>
+<FONT color="green">101</FONT>            <a name="line.101"></a>
+<FONT color="green">102</FONT>            /**<a name="line.102"></a>
+<FONT color="green">103</FONT>             * Gets original string that caused the parse exception (if specified).<a name="line.103"></a>
+<FONT color="green">104</FONT>             *<a name="line.104"></a>
+<FONT color="green">105</FONT>             * @return The string that didn't parse, {@code null} if none.<a name="line.105"></a>
+<FONT color="green">106</FONT>             */<a name="line.106"></a>
+<FONT color="green">107</FONT>            public String getUnparsableString() {<a name="line.107"></a>
+<FONT color="green">108</FONT>            <a name="line.108"></a>
+<FONT color="green">109</FONT>                    return unparsableString;<a name="line.109"></a>
+<FONT color="green">110</FONT>            }<a name="line.110"></a>
+<FONT color="green">111</FONT>    }<a name="line.111"></a>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</PRE>
+</BODY>
+</HTML>

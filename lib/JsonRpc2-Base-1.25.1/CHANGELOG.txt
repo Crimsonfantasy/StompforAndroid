@@ -1,0 +1,155 @@
+CHANGE LOG
+
+JSON-RPC 2.0 Base, Copyright (c) Vladimir Dzhuvinov, 2009 - 2012
+
+
+version 1.0 (2009-10-04)
+	* First release.
+
+version 1.1 (2009-12-04)
+	* Official release.
+	* Major refactoring.
+
+version 1.2 (2009-12-27)
+	* More detailed messages in parser exceptions.
+
+version 1.3 (2010-01-06)
+	* Adds convenient constant instances of the JSONRPC2Error class for all 
+	  standard JSON-RPC 2.0 errors (with proper codes and messages): 
+	  PARSE_ERROR, INVALID_REQUEST, METHOD_NOT_FOUND, INVALID_PARAMS, 
+	  INTERNAL_ERROR.
+
+version 1.4 (2010-02-02)
+	* New JSONRPC2ParamsType class enumerates the three possible JSON-RPC 
+	  parameter types: NO_PARAMS, ARRAY and OBJECT.
+	* Improves the documentation.
+	
+version 1.5 (2010-02-12)
+	* Adds the utility classes PositionalParamsRetriever and 
+	  NamedParamsRetriever to ease the processing of request parameters 
+	  (type and mandatory/optional parameter checking, default values).
+	* Introduces JUnit test cases.
+
+version 1.6 (2010-02-18)
+	* Adds a base absract class ParamsRetriever to the utility parameter 
+	  retriever classes PositionalParamsRetriever and NamedParamsRetriever.
+	* Adds methods for getting enumerated strings to the parameter retriever 
+	  classes.
+	  
+version 1.7 (2010-02-24)
+	* Adds a getNames() method to NamedParamsRetriever to list the names of 
+	  all parameters.
+	* Adds the checking methods checkNames(String[] mandatoryNames) and 
+	  checkNames(String[] mandatoryNames,String[]optionalNames) to 
+	  NamedParamsRetriever which will throw an exception if a mandatory 
+	  parameter name is missing or a name outside the expected is present.
+	  
+version 1.8 (2010-03-11)
+	* Changes the signature of PositionalParamsRetriever.getOptEnumString().
+	* Changes the signature of NamedParamsRetriever.getOptEnumString().
+
+version 1.9 (2010-03-12)
+	* Refactors the PositionalParamsRetriever class, hasParameter() and 
+	  ensureParameter() methods.
+	* Refactors the NamedParamsRetriever class, hasParameter() and 
+	  ensureParameter() methods.
+
+version 1.9.1 (2010-03-15)
+	* Minor internal refactoring in the util classes.
+
+version 1.9.2 (2010-08-07)
+	* Util parameter retriever methods getEnumString() add support for Java 
+	  enum constants.
+
+version 1.9.3 (2010-08-09)
+	* Adds explicit class parameter to util retriever methods getOpt().
+	
+version 1.9.4 (2010-08-19)
+	* Renames util PositionalParamsRetriever.getEnum()|getOptEnum() and
+	  NamedParamsRetriever.getEnum()|getOptEnum() methods
+
+version 1.10 (2010-09-07)
+	* Adds util retriever methods to allow optional null values for
+	  JSON string, JSON array and JSON object parameters. The generic
+	  ensure(), get() and getOpt() methods are also updated for this.
+
+version 1.11 (2010-10-04)
+	* Factors out common parse logic to the JSONRPC2Message class.
+	* Parse exceptions provide specific message on empty JSON string.
+
+version 1.12 (2010-12-12)
+	* Released under the Apache Open Source License 2.0.
+
+version 1.13 (2011-03-08)
+	* Minor changes to the Ant build.xml script.
+	* Includes version number in the JAR file.
+
+version 1.14 (2011-03-09)
+	* Allows optional parsing of JSON objects where their original member
+	  order is preserved.
+	* Allows for non-strict parsing of JSON-RPC 2.0 messages where the
+	  "jsonrpc" version field is not checked.
+	* Fixes JSONArray cast bug in JSONRPC2Message.parseJSONObject().
+	* Documentation improvements.
+
+version 1.15 (2011-05-19)
+	* Allows for concurrent execution of the static JSONRPC2Message.parse
+	  method.
+	* Includes field in JSONRPCParseException to indicate the cause as
+	  bad JSON or protocol exception.
+
+version 1.16 (2011-05-19)
+	* Refactors parsing, adds a reusable JSONRPC2Parser class.
+
+version 1.17 (2011-06-11)
+	* Switches the underlying JSON library from JSON.simple to the interface
+	  compatible JSON Smart 1.0.6.4 for faster and more efficient parsing.
+	* Expands use of Java generics.
+
+version 1.18 (2011-07-07)
+	* Completes the introduction of Java generics into the utility retriever
+	  classes.
+
+version 1.19 (2011-07-10)
+	* Renames parser methods "noStrict" to "ignoreversion" and "isNoStrict" 
+	  to "ignoresversion".
+	* Adds methods for appending non-standard attributes (as aditional JSON 
+	  object members) to JSON-RPC 2.0 messages.
+	* Additional parser constructors and static parse methods to allow
+	  setting of non-standard attribute parsing.
+
+version 1.20 (2011-07-13)
+	* Re-introduce parser methods "noStrict" and "isNoStrict" as deprecated.
+	* Documentation improvements.
+	* Updates JSON Smart JAR to 1.0.9.
+
+version 1.21 (2011-08-05)
+	* Provides an equals method implementation to the JSONRPC2Error class
+	  which compares the error code values.
+
+version 1.21.1 (2011-08-06)
+	* Replaces String.isEmpty() by String.length()==0 for Google Android
+	  compatibility (pre 9 level APIs).
+
+version 1.22 (2011-10-08)
+	* Utility parameter retriever classes relax the requirement of the
+	  underlying datatype for int, long, float and double values by
+	  converting from the more general java.lang.Number representation.
+	* Removes the get{Opt}[Type]Array(...) methods from the utility 
+	  parameter retriever classes.
+
+version 1.23 (2011-10-09)
+	* Reintroduces the previously removed utility parameter retriever 
+	  methods get{Opt}StringArray(...).
+
+version 1.24 (2011-10-25)
+	* Adds methods hasParameters(String[] names) and 
+	  hasParameters(String[] mandatoryNames, String[] optionalNames) to the
+	  utility NamedParamsRetriever class.
+	* Updates JSON Smart JAR to 1.0.9-1 (fixes parse bug #15).
+
+version 1.25 (2012-02-19)
+	* Updates JSON Smart JAR to 1.1.
+
+version 1.25.1 (2012-04-03)
+	* Updades JSON Smart JAR to 1.1.1.
